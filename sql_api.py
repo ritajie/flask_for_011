@@ -32,7 +32,7 @@ def delete(student_id):
 # 3.change
 
 
-# 4.search
+# 4.search: 根据关键字从数据库模糊查找
 def seach(keyword):
     # 1.新建一个“光标”
     cursor = conn.cursor()
@@ -47,8 +47,17 @@ def seach(keyword):
     cursor.close()
     # 5.提交事物（刷新数据库）
     conn.commit()
-    return True
+    return ans
    
 
+# 5.all lines 返回数据库中所有的行
+def all_lines():
+    cursor = conn.cursor()
+    sql = 'select * from student order by student_id desc'
+    cursor.execute(sql)
+    ans = cursor.fetchall()
+    cursor.close()
+    conn.commit()
+    return ans
 
 
