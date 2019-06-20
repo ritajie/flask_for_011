@@ -1,0 +1,27 @@
+
+body {
+    background: rgb(223, 223, 223) !important;
+}
+
+#btn-and-input-family{
+    margin: 15px;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+input{
+    width: 150px !important;
+    display: inline !important;
+}
+
+.btn{
+    margin-right: 15px;
+}
+
+#table-box{
+    margin: 15px;
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+}

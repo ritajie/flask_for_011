@@ -7,6 +7,8 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    arr = []
+    num = arr[9]
     return  render_template('index.html')
 
 

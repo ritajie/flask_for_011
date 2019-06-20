@@ -1,69 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <script type="text/javascript"  src='/static/js/jquery.min.js'></script>
+    <script type="text/javascript" src='/static/js/jquery.min.js'></script>
+    <link rel="stylesheet" href="/static/css/my.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <title>xx</title>
 </head>
 
 
 <body>
-    <input type="text" id='input-add'>
-    <button id='btn-add'>添加</button>
+    <!-- 最上面的按钮和输入框 -->
+    <div id="btn-and-input-family">
+        <input type="text" id='input-add' class='form-control'>
+        <button id='btn-add' class='btn btn-info'>添加</button>
+        <input type="text" id='input-delete' class='form-control'>
+        <button id='btn-delete' class='btn btn-danger'>删除</button>
+        <input type="text" id='input-search' class='form-control'>
+        <button id='btn-search' class='btn btn-primary'>查找</button>
+    </div>
 
-    <input type="text" id='input-delete'>
-    <button id='btn-delete'>删除</button>
-
-    <input type="text" id='input-search'>
-    <button id='btn-search'>查找</button>
-
+    <!-- 放信息的表格 -->
+    <div id='table-box'>
+        <table class="table">
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </body>
 
 
 <!-- 正儿八经的函数function -->
 <script>
     // 1. 添加something
-    add_something = function(){
+    add_something = function () {
         // 取出输入框的值
         a = $('#input-add').val()
-        
+
         // 做一个简单的dict
         data = {
             'keyyy': a
         }
         // 给后端传过去
-        $.post('/add/', data, function(ans){
-            if (ans == 'ok'){
+        $.post('/add/', data, function (ans) {
+            if (ans == 'ok') {
                 // alert('添加成功');
             }
-            else{
+            else {
                 alert('添加失败');
             }
         })
-    } 
+    }
 
     // 2.删除something
-    delete_something = function(){
+    delete_something = function () {
         the_id = $('#input-delete').val()
-        if (the_id == ""){
+        if (the_id == "") {
             alert('请输入点东西好吗')
             return false
         }
-        if (confirm('你确定？') == false){
+        if (confirm('你确定？') == false) {
             return false
         }
 
         data = {
             'id': the_id
         }
-        $.post('/delete/', data, function(ans){
-            if (ans == 'ok'){
+        $.post('/delete/', data, function (ans) {
+            if (ans == 'ok') {
                 // alert('删除成功');
                 location.reload()
             }
-            else{
+            else {
                 alert('删除失败');
             }
         })
@@ -71,36 +82,46 @@
     }
 
     // 3. 查找something
-    search_something = function(){
+    search_something = function () {
         keyword = $('#input-search').val()
-        if (keyword == ""){
+        if (keyword == "") {
             return false
         }
         data = {
             'keyword': keyword
         }
-        $.post('/search-something/', data, function(ans){
+        $.post('/search-something/', data, function (ans) {
             // ans = '[1, 2, 3]'
             // lines = [1, 2, 3]
             console.log(ans)
             all_lines = $.parseJSON(ans)
-            for (index in all_lines){
+            for (index in all_lines) {
                 each_line = all_lines[index]
-                $('body').append('<p>'+ each_line + '</p>')
+                $('#table-box').append('<p>' + each_line + '</p>')
             }
-            if (all_lines.length == 0){
+            if (all_lines.length == 0) {
                 alert('查询结果为空')
             }
         })
     }
 
     // 4. 展示所有数据库中的数据到页面上
-    show_all_lines = function(){
-        $.post('/all-lines/', {}, function(ans){
+    show_all_lines = function () {
+        $.post('/all-lines/', {}, function (ans) {
             all_lines = $.parseJSON(ans)
-            for (index in all_lines){
+            for (index in all_lines) {
                 each_line = all_lines[index]
-                $('body').append('<p>'+ each_line + '</p>')
+                console.log(each_line)
+                line_index = each_line[0]
+                line_value1 = each_line[1]
+                line_value2 = each_line[2]
+                new_html = '<tr>'+
+                               '<td>'+line_index+'</td>'+
+                               '<td>'+line_value1+'</td>'+
+                               '<td>'+line_value2+'</td>'+
+                            '</tr>'
+
+                $('tbody').append(new_html)
             }
         })
     }
@@ -109,22 +130,22 @@
 <!-- 绑定按钮点击事件 -->
 <script>
     // 1.点击“添加”按钮
-    $('#btn-add').click(function(){
+    $('#btn-add').click(function () {
         add_something()
         location.reload()
     })
     // 2.点击“删除”按钮
-    $('#btn-delete').click(function(){
+    $('#btn-delete').click(function () {
         delete_something()
     })
     // 3.点击“查询”按钮
-    $('#btn-search').click(function(){
+    $('#btn-search').click(function () {
         $('p').hide(300)
         search_something()
     })
 
     // 一个main函数（误），页面加载完毕后立即执行
-    window.onload = function(){
+    window.onload = function () {
         show_all_lines()
     }
 </script>
